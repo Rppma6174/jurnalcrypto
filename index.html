@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal Analisis Kripto Pro</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #bb86fc;
+            --secondary-color: #03dac6;
+            --text-color: #e0e0e0;
+            --border-color: #333333;
+            --success-color: #26a69a;
+            --danger-color: #ef5350;
+            --warning-color: #ffab00;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 1.2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        h1, h2 {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        .form-section, .list-section {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 4px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover { background-color: #a052f5; }
+
+        .analysis-card {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .analysis-card.bullish { border-left: 5px solid var(--success-color); }
+        .analysis-card.bearish { border-left: 5px solid var(--danger-color); }
+        .analysis-card.neutral { border-left: 5px solid #78909c; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .card-header h3 { margin: 0; font-size: 1.5rem; }
+        .card-status { padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; font-weight: bold; }
+        .status-menunggu { background-color: var(--warning-color); color: black; }
+        .status-aktif { background-color: #2962ff; color: white; }
+        .status-tercapai { background-color: var(--success-color); color: black; }
+        .status-gagal { background-color: var(--danger-color); color: white; }
+
+        .card-body p { margin: 0.5rem 0; line-height: 1.6; }
+        .card-body hr { border: 0; border-top: 1px solid var(--border-color); margin: 1rem 0; }
+        
+        .trade-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .detail-item { background-color: var(--surface-color); padding: 0.75rem; border-radius: 4px; }
+        .detail-item span { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 0.25rem; }
+        .detail-item strong { font-size: 1.1rem; }
+        
+        .profit-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: rgba(38, 166, 154, 0.1);
+            border: 1px solid var(--success-color);
+            border-radius: 4px;
+            text-align: center;
+        }
+        .profit-section span { display: block; font-size: 1rem; color: #aaa; }
+        .profit-section h4 { margin: 0.5rem 0 0 0; font-size: 2rem; color: var(--success-color); }
+        
+        .card-footer { margin-top: 1rem; font-size: 0.8rem; color: #888; }
+        
+        .btn-delete {
+            position: absolute; top: 10px; right: 10px; background: var(--danger-color); color: white;
+            border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;
+            font-size: 1rem; line-height: 30px; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <section class="form-section">
+            <h2>Buat Analisis Baru</h2>
+            <form id="analysisForm">
+                <div class="form-group">
+                    <label for="cryptoPair">Crypto Pair (cth: BTC/USDT)</label>
+                    <input type="text" id="cryptoPair" required>
+                </div>
+                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="analysisType">Tipe Analisis</label>
+                        <select id="analysisType">
+                            <option value="bullish">Bullish (Long)</option>
+                            <option value="bearish">Bearish (Short)</option>
+                            <option value="neutral">Neutral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status Posisi</label>
+                        <select id="status">
+                            <option value="Menunggu">Menunggu</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="TP Tercapai">TP Tercapai</option>
+                            <option value="SL Kena">SL Kena</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h4>Detail Posisi</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entryPrice">Harga Entri</label>
+                        <input type="number" id="entryPrice" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="targetPrice">Target Harga</label>
+                        <input type="number" id="targetPrice" step="any" required>
+                    </div>
+                </div>
+                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="leverage">Leverage (x)</label>
+                        <input type="number" id="leverage" placeholder="cth: 50" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="margin">Margin / Modal ($)</label>
+                        <input type="number" id="margin" placeholder="cth: 3.5" step="any" required>
+                    </div>
+                </div>
+
+                <h4>Analisis</h4>
+                <div class="form-group">
+                    <label for="notes">Catatan / Alasan Analisis</label>
+                    <textarea id="notes" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Simpan Analisis</button>
+            </form>
+        </section>
+
+        <section class="list-section">
+            <h2>Riwayat Analisis Anda</h2>
+            <div id="analysisList">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('analysisForm');
+            const analysisList = document.getElementById('analysisList');
+
+            const getAnalyses = () => JSON.parse(localStorage.getItem('cryptoAnalysesProV2')) || [];
+            const saveAnalyses = (analyses) => localStorage.setItem('cryptoAnalysesProV2', JSON.stringify(analyses));
+
+            const renderAnalyses = () => {
+                const analyses = getAnalyses().sort((a, b) => b.id - a.id);
+                analysisList.innerHTML = '';
+
+                if (analyses.length === 0) {
+                    analysisList.innerHTML = '<p>Belum ada data analisis. Silakan tambahkan dari form di samping.</p>';
+                    return;
+                }
+
+                analyses.forEach(analysis => {
+                    const card = document.createElement('div');
+                    card.className = `analysis-card ${analysis.type}`;
+                    
+                    const margin = parseFloat(analysis.margin) || 0;
+                    const leverage = parseFloat(analysis.leverage) || 0;
+                    const rewardPercent = parseFloat(analysis.rewardPercent) || 0;
+
+                    // --- PERHITUNGAN YANG DIPERBAIKI ---
+                    // 1. Hitung total ukuran posisi yang sebenarnya ( leveraged position)
+                    const totalPositionSize = margin * leverage;
+                    // 2. Hitung potensi profit dari total ukuran posisi
+                    const potentialProfit = totalPositionSize * (rewardPercent / 100);
+                    
+                    let statusClass = '';
+                    switch (analysis.status) {
+                        case 'Menunggu': statusClass = 'status-menunggu'; break;
+                        case 'Aktif': statusClass = 'status-aktif'; break;
+                        case 'TP Tercapai': statusClass = 'status-tercapai'; break;
+                        case 'SL Kena': statusClass = 'status-gagal'; break;
+                    }
+                    
+                    card.innerHTML = `
+                        <button class="btn-delete" data-id="${analysis.id}">&times;</button>
+                        <div class="card-header">
+                            <h3>${analysis.pair}</h3>
+                            <span class="card-status ${statusClass}">${analysis.status}</span>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Alasan Analisis:</strong> ${analysis.notes.replace(/\n/g, '<br>')}</p>
+                            <hr>
+                            <div class="trade-details">
+                                <div class="detail-item"><span>Harga Entri</span><strong>$${analysis.entryPrice}</strong></div>
+                                <div class="detail-item"><span>Target Harga</span><strong>$${analysis.targetPrice}</strong></div>
+                                <div class="detail-item"><span>Leverage</span><strong>${leverage}x</strong></div>
+                                <div class="detail-item"><span>Margin (Modal)</span><strong>$${margin.toFixed(2)}</strong></div>
+                                <div class="detail-item"><span>Total Posisi</span><strong>$${totalPositionSize.toFixed(2)}</strong></div>
+                                <div class="detail-item"><span>Target Reward</span><strong>${rewardPercent.toFixed(2)}%</strong></div>
+                            </div>
+                            <div class="profit-section">
+                                <span>Potensi Keuntungan</span>
+                                <h4>$${potentialProfit.toFixed(2)}</h4>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            Dibuat pada: ${new Date(analysis.id).toLocaleString()}
+                        </div>
+                    `;
+                    analysisList.appendChild(card);
+                });
+            };
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const entryPrice = parseFloat(document.getElementById('entryPrice').value);
+                const targetPrice = parseFloat(document.getElementById('targetPrice').value);
+                const analysisType = document.getElementById('analysisType').value;
+                let rewardPercent = 0;
+
+                // --- PERHITUNGAN REWARD % OTOMATIS ---
+                if (entryPrice > 0) {
+                    if (analysisType === 'bullish') { // LONG
+                        rewardPercent = ((targetPrice - entryPrice) / entryPrice) * 100;
+                    } else if (analysisType === 'bearish') { // SHORT
+                        rewardPercent = ((entryPrice - targetPrice) / entryPrice) * 100;
+                    }
+                }
+
+                const newAnalysis = {
+                    id: Date.now(),
+                    pair: document.getElementById('cryptoPair').value,
+                    type: analysisType,
+                    status: document.getElementById('status').value,
+                    entryPrice: entryPrice,
+                    targetPrice: targetPrice,
+                    leverage: document.getElementById('leverage').value,
+                    margin: document.getElementById('margin').value,
+                    rewardPercent: rewardPercent, // Simpan hasil perhitungan
+                    notes: document.getElementById('notes').value,
+                };
+
+                const analyses = getAnalyses();
+                analyses.push(newAnalysis);
+                saveAnalyses(analyses);
+
+                renderAnalyses();
+                form.reset();
+            });
+
+            analysisList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('btn-delete')) {
+                    const idToDelete = parseInt(e.target.getAttribute('data-id'));
+                    if(confirm('Apakah Anda yakin ingin menghapus analisis ini?')) {
+                        let analyses = getAnalyses();
+                        analyses = analyses.filter(analysis => analysis.id !== idToDelete);
+                        saveAnalyses(analyses);
+                        renderAnalyses();
+                    }
+                }
+            });
+
+            renderAnalyses();
+        });
+    </script>
+
+</body>
+</html>
